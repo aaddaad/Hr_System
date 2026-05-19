@@ -1,0 +1,48 @@
+数据库名：hr_recruit
+
+
+Table: position
+Columns:
+id bigint AI PK
+title varchar(100)
+description text
+status varchar(20)
+create_time datetime
+update_time datetime
+
+Table: sys_user
+Columns:
+id bigint AI PK
+username varchar(50)
+password varchar(100)
+real_name varchar(50)
+status tinyint
+create_time datetime
+
+
+-- 招聘岗位管理平台 数据库脚本
+-- 1. 删除已存在的表
+DROP TABLE IF EXISTS `sys_user`;
+DROP TABLE IF EXISTS `position`;
+
+-- 2. 用户表（登录使用）
+CREATE TABLE `sys_user` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `username` varchar(50) NOT NULL COMMENT '账号',
+  `password` varchar(50) NOT NULL COMMENT '密码',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+
+-- 3. 岗位表（核心业务表）
+CREATE TABLE `position` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '岗位ID',
+  `title` varchar(100) NOT NULL COMMENT '岗位名称',
+  `description` text COMMENT '岗位描述',
+  `status` varchar(20) NOT NULL DEFAULT 'DRAFT' COMMENT '状态 DRAFT/PENDING/PUBLISHED/CLOSED',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='岗位表';
+
+-- 4. 初始化默认用户（前端可直接登录）
+INSERT INTO `sys_user` (`username`, `password`) VALUES ('admin', '123456');

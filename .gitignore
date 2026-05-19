@@ -1,0 +1,35 @@
+# Maven
+target/
+*.jar
+*.war
+*.ear
+*.class
+
+# Log files
+*.log
+logs/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Properties (contains sensitive info)
+application.properties
+application.yml
+application-dev.yml
+application-prod.yml
+
+# Environment
+.env
+.env.local
+
+# Build
+bin/
+dist/
+
+# Test
+test-output/

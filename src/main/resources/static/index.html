@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>招聘岗位信息管理系统 | 人事管理平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        /* 马卡龙色系变量 */
+        :root {
+            --macaron-mint: #98D2C0;
+            --macaron-lavender: #C5B9E2;
+            --macaron-peach: #F7C8A0;
+            --macaron-rose: #F2A7A7;
+            --macaron-cream: #FFF5E6;
+            --macaron-honey: #F5D6A5;
+            --macaron-sage: #A8C3A8;
+            --macaron-blue: #A8D0E6;
+            --macaron-purple: #D4C5E9;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.12);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 主容器 */
+        .app-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* 头部 */
+        .header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 28px;
+            padding: 20px 28px;
+            margin-bottom: 28px;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .title-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .title-icon {
+            font-size: 32px;
+            background: linear-gradient(135deg, #98D2C0, #6BAF8A);
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #2D6A4F, #40916C);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            color: #6B7280;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        /* 统计卡片 */
+        .stats-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-emoji {
+            font-size: 28px;
+        }
+
+        .stat-info h4 {
+            font-size: 0.75rem;
+            color: #6B7280;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2D6A4F;
+        }
+
+        /* 工具栏 */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .toolbar-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* 搜索框 */
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 10px 16px 10px 40px;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 40px;
+            font-size: 14px;
+            width: 260px;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #98D2C0;
+            box-shadow: 0 0 0 3px rgba(152, 210, 192, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #9CA3AF;
+        }
+
+        /* 筛选下拉框 */
+        .filter-select {
+            padding: 10px 32px 10px 16px;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 40px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #98D2C0, #6BAF8A);
+            color: white;
+            box-shadow: 0 2px 6px rgba(107, 175, 138, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(107, 175, 138, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #C5B9E2, #B4A6D4);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1.5px solid #E5E7EB;
+            color: #374151;
+        }
+
+        .btn-outline:hover {
+            border-color: #98D2C0;
+            background: #F9FEFC;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #A8C3A8, #8FAB8F);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #F5D6A5, #F0C68A);
+            color: #5D3A1A;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #F2A7A7, #E88A8A);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 12px;
+        }
+
+        /* 主体区域 */
+        .main-content {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        /* 表单卡片 */
+        .form-section {
+            flex: 1.2;
+            min-width: 320px;
+        }
+
+        .list-section {
+            flex: 2.8;
+            min-width: 500px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #F3F4F6;
+        }
+
+        .card-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2D6A4F;
+        }
+
+        .card-header-icon {
+            font-size: 24px;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.85rem;
+        }
+
+        .required {
+            color: #F2A7A7;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 16px;
+            font-size: 14px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #98D2C0;
+            box-shadow: 0 0 0 3px rgba(152, 210, 192, 0.2);
+        }
+
+        .form-error {
+            color: #F2A7A7;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        /* 表格样式 */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 12px;
+            background: #F9FAFB;
+            font-weight: 600;
+            color: #6B7280;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #F3F4F6;
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background: #F9FEFC;
+        }
+
+        /* 状态标签 */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 500;
+            width: fit-content;
+        }
+
+        .status-DRAFT {
+            background: #FFF5E6;
+            color: #C47B2E;
+        }
+        .status-PENDING {
+            background: #FFF9E6;
+            color: #D4A017;
+        }
+        .status-PUBLISHED {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        .status-CLOSED {
+            background: #F3F4F6;
+            color: #6B7280;
+        }
+
+        /* 操作按钮组 */
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1F2937;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s;
+            pointer-events: none;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { background: #2E7D32; }
+        .toast.error { background: #D32F2F; }
+        .toast.warning { background: #ED6C02; }
+
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 32px;
+            padding: 28px;
+            width: 420px;
+            max-width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-content h3 {
+            font-size: 1.3rem;
+            color: #2D6A4F;
+            margin-bottom: 16px;
+        }
+
+        .modal-content textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 16px;
+            font-family: inherit;
+            resize: vertical;
+            margin: 12px 0;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #9CA3AF;
+        }
+
+        .empty-state span {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .search-input { width: 100%; }
+            .form-section, .list-section { min-width: 100%; }
+            .header-top { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <!-- 头部 -->
+    <div class="header">
+        <div class="header-top">
+            <div class="title-section">
+                <div class="title-icon">📋</div>
+                <div>
+                    <h1>招聘岗位信息管理系统</h1>
+                    <div class="subtitle">人事管理平台 · 岗位全生命周期管理</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="stats-row" id="statsRow">
+            <div class="stat-card"><span class="stat-emoji">📊</span><div class="stat-info"><h4>全部岗位</h4><div class="stat-number" id="statTotal">0</div></div></div>
+            <div class="stat-card"><span class="stat-emoji">📝</span><div class="stat-info"><h4>草稿</h4><div class="stat-number" id="statDraft">0</div></div></div>
+            <div class="stat-card"><span class="stat-emoji">⏳</span><div class="stat-info"><h4>待审批</h4><div class="stat-number" id="statPending">0</div></div></div>
+            <div class="stat-card"><span class="stat-emoji">✅</span><div class="stat-info"><h4>已发布</h4><div class="stat-number" id="statPublished">0</div></div></div>
+            <div class="stat-card"><span class="stat-emoji">🔒</span><div class="stat-info"><h4>已关闭</h4><div class="stat-number" id="statClosed">0</div></div></div>
+        </div>
+
+        <!-- 工具栏 -->
+        <div class="toolbar">
+            <div class="toolbar-group">
+                <div class="search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchInput" class="search-input" placeholder="搜索岗位名称...">
+                </div>
+                <select id="statusFilter" class="filter-select">
+                    <option value="">🏷️ 全部状态</option>
+                    <option value="DRAFT">📝 草稿</option>
+                    <option value="PENDING">⏳ 待审批</option>
+                    <option value="PUBLISHED">✅ 已发布</option>
+                    <option value="CLOSED">🔒 已关闭</option>
+                </select>
+                <button id="searchBtn" class="btn btn-primary btn-sm">🔍 搜索</button>
+                <button id="resetBtn" class="btn btn-outline btn-sm">🔄 重置</button>
+            </div>
+            <div class="toolbar-group">
+                <input type="file" id="uploadFile" accept=".xlsx,.xls" style="display:none">
+                <button id="uploadBtn" class="btn btn-outline btn-sm">📎 选择Excel文件</button>
+                <button id="uploadSubmitBtn" class="btn btn-secondary btn-sm" disabled>⬆️ 上传导入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主体 -->
+    <div class="main-content">
+        <!-- 表单区 -->
+        <div class="form-section">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-header-icon">✏️</span>
+                    <h3 id="formTitle">新增岗位</h3>
+                </div>
+                <form id="positionForm">
+                    <div class="form-group">
+                        <label>岗位名称 <span class="required">*</span></label>
+                        <input type="text" id="formTitleInput" maxlength="100" placeholder="例如：Java后端开发实习生">
+                        <div class="form-error" id="titleError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>岗位描述</label>
+                        <textarea id="formDescription" rows="5" placeholder="岗位职责：&#10;1. ...&#10;&#10;任职要求：&#10;1. ..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>岗位状态</label>
+                        <select id="formStatus">
+                            <option value="DRAFT">📝 草稿</option>
+                            <option value="PENDING">⏳ 待审批</option>
+                            <option value="PUBLISHED">✅ 已发布</option>
+                            <option value="CLOSED">🔒 已关闭</option>
+                        </select>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit" id="submitBtn" class="btn btn-primary">➕ 新增岗位</button>
+                        <button type="button" id="cancelEditBtn" class="btn btn-outline" style="display: none;">取消编辑</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 列表区 -->
+        <div class="list-section">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-header-icon">📋</span>
+                    <h3>岗位列表</h3>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr><th width="60">ID</th><th>岗位名称</th><th>岗位描述</th><th width="110">状态</th><th width="260">操作</th></tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr class="empty-state"><td colspan="5"><span>📭</span><br>加载中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- 审批驳回模态框 -->
+<div id="rejectModal" class="modal">
+    <div class="modal-content">
+        <h3>💬 审批驳回</h3>
+        <textarea id="rejectComment" placeholder="请输入驳回原因..." rows="4"></textarea>
+        <div class="modal-buttons">
+            <button id="rejectConfirmBtn" class="btn btn-danger">确认驳回</button>
+            <button id="rejectCancelBtn" class="btn btn-outline">取消</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'http://localhost:8080/webapi/positions';
+    let editId = null;
+    let selectedFile = null;
+
+    function showToast(msg, type) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.className = `toast ${type} show`;
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function updateStats(positions) {
+        document.getElementById('statTotal').innerText = positions.length;
+        document.getElementById('statDraft').innerText = positions.filter(p => p.status === 'DRAFT').length;
+        document.getElementById('statPending').innerText = positions.filter(p => p.status === 'PENDING').length;
+        document.getElementById('statPublished').innerText = positions.filter(p => p.status === 'PUBLISHED').length;
+        document.getElementById('statClosed').innerText = positions.filter(p => p.status === 'CLOSED').length;
+    }
+
+    function getStatusBadge(status) {
+        const map = { DRAFT: '📝 草稿', PENDING: '⏳ 待审批', PUBLISHED: '✅ 已发布', CLOSED: '🔒 已关闭' };
+        return `<span class="status-badge status-${status}">${map[status] || status}</span>`;
+    }
+
+    function getStatusButtons(p) {
+        switch(p.status) {
+            case 'DRAFT': return `<button class="btn btn-primary btn-sm" onclick="submitApproval(${p.id})">📤 提交审批</button>`;
+            case 'PENDING': return `<button class="btn btn-success btn-sm" onclick="approvePosition(${p.id}, 'APPROVE')">✅ 通过</button>
+                                     <button class="btn btn-danger btn-sm" onclick="showRejectModal(${p.id})">❌ 驳回</button>`;
+            case 'PUBLISHED': return `<button class="btn btn-warning btn-sm" onclick="closePosition(${p.id})">🔒 关闭</button>`;
+            case 'CLOSED': return `<button class="btn btn-primary btn-sm" onclick="submitApproval(${p.id})">🔄 重新发布</button>`;
+            default: return '';
+        }
+    }
+
+    async function loadPositions() {
+        const keyword = document.getElementById('searchInput').value;
+        const status = document.getElementById('statusFilter').value;
+        let url = API_BASE;
+        const params = [];
+        if (keyword.trim()) params.push(`keyword=${encodeURIComponent(keyword.trim())}`);
+        if (status) params.push(`status=${status}`);
+        if (params.length) url += '?' + params.join('&');
+        try {
+            const res = await fetch(url);
+            const result = await res.json();
+            const data = result.data || [];
+            updateStats(data);
+            const tbody = document.getElementById('tableBody');
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr class="empty-state"><td colspan="5"><span>📭</span><br>暂无岗位数据<br><small>请通过表单新增或上传Excel导入</small></td></tr>';
+                return;
+            }
+            tbody.innerHTML = data.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td><strong>${escapeHtml(p.title)}</strong></td>
+                    <td>${escapeHtml((p.description || '-').substring(0, 55))}${(p.description || '').length > 55 ? '...' : ''}</td>
+                    <td>${getStatusBadge(p.status)}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-outline btn-sm" onclick="editPosition(${p.id})">✏️ 编辑</button>
+                        ${getStatusButtons(p)}
+                        <button class="btn btn-outline btn-sm" onclick="deletePosition(${p.id}, '${p.status}')">🗑️ 删除</button>
+                    </td>
+                </tr>
+            `).join('');
+        } catch(e) { showToast('加载失败', 'error'); }
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+
+    async function editPosition(id) {
+        const res = await fetch(`${API_BASE}/${id}`);
+        const result = await res.json();
+        const p = result.data;
+        if(p) {
+            editId = p.id;
+            document.getElementById('formTitle').innerHTML = '✏️ 编辑岗位';
+            document.getElementById('submitBtn').innerHTML = '💾 保存修改';
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+            document.getElementById('formTitleInput').value = p.title;
+            document.getElementById('formDescription').value = p.description || '';
+            document.getElementById('formStatus').value = p.status;
+            document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+
+    function cancelEdit() {
+        editId = null;
+        document.getElementById('formTitle').innerHTML = '✏️ 新增岗位';
+        document.getElementById('submitBtn').innerHTML = '➕ 新增岗位';
+        document.getElementById('cancelEditBtn').style.display = 'none';
+        document.getElementById('formTitleInput').value = '';
+        document.getElementById('formDescription').value = '';
+        document.getElementById('formStatus').value = 'DRAFT';
+        document.getElementById('titleError').innerText = '';
+    }
+
+    document.getElementById('positionForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('formTitleInput').value.trim();
+        if(!title) { document.getElementById('titleError').innerText = '岗位名称不能为空'; return; }
+        if(title.length > 100) { document.getElementById('titleError').innerText = '岗位名称不能超过100字符'; return; }
+        document.getElementById('titleError').innerText = '';
+        const data = { title, description: document.getElementById('formDescription').value, status: document.getElementById('formStatus').value };
+        try {
+            let res;
+            if(editId) res = await fetch(`${API_BASE}/${editId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            else res = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+            const result = await res.json();
+            if(result.code === 200) { showToast(editId ? '修改成功' : '新增成功', 'success'); cancelEdit(); loadPositions(); }
+            else { showToast(result.message, 'error'); }
+        } catch(e) { showToast('操作失败', 'error'); }
+    });
+
+    document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
+    document.getElementById('searchBtn').addEventListener('click', () => loadPositions());
+    document.getElementById('resetBtn').addEventListener('click', () => { document.getElementById('searchInput').value = ''; document.getElementById('statusFilter').value = ''; loadPositions(); });
+    document.getElementById('statusFilter').addEventListener('change', () => loadPositions());
+    document.getElementById('searchInput').addEventListener('keypress', (e) => { if(e.key === 'Enter') loadPositions(); });
+
+    async function deletePosition(id, status) {
+        if(status === 'PUBLISHED') { showToast('已发布的岗位不可直接删除，请先关闭', 'error'); return; }
+        if(!confirm('确定删除该岗位吗？')) return;
+        const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
+        const result = await res.json();
+        if(result.code === 200) { showToast('删除成功', 'success'); loadPositions(); }
+        else { showToast(result.message, 'error'); }
+    }
+
+    async function submitApproval(id) {
+        const res = await fetch(`${API_BASE}/${id}/submit`, { method: 'POST' });
+        const result = await res.json();
+        if(result.code === 200) { showToast('已提交审批', 'success'); loadPositions(); }
+        else { showToast(result.message, 'error'); }
+    }
+
+    async function approvePosition(id, action) {
+        const res = await fetch(`${API_BASE}/${id}/approve`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, comment: '' }) });
+        const result = await res.json();
+        if(result.code === 200) { showToast(action === 'APPROVE' ? '审批通过' : '已驳回', 'success'); loadPositions(); }
+        else { showToast(result.message, 'error'); }
+    }
+
+    async function closePosition(id) {
+        const res = await fetch(`${API_BASE}/${id}/close`, { method: 'POST' });
+        const result = await res.json();
+        if(result.code === 200) { showToast('岗位已关闭', 'success'); loadPositions(); }
+        else { showToast(result.message, 'error'); }
+    }
+
+    let pendingRejectId = null;
+    function showRejectModal(id) { pendingRejectId = id; document.getElementById('rejectModal').classList.add('show'); document.getElementById('rejectComment').value = ''; }
+    function closeModal() { document.getElementById('rejectModal').classList.remove('show'); pendingRejectId = null; }
+    document.getElementById('rejectConfirmBtn').onclick = async () => {
+        const comment = document.getElementById('rejectComment').value.trim();
+        if(!comment) { showToast('请填写驳回原因', 'error'); return; }
+        const res = await fetch(`${API_BASE}/${pendingRejectId}/approve`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'REJECT', comment }) });
+        const result = await res.json();
+        if(result.code === 200) { showToast('已驳回', 'success'); loadPositions(); closeModal(); }
+        else { showToast(result.message, 'error'); }
+    };
+    document.getElementById('rejectCancelBtn').onclick = closeModal;
+
+    document.getElementById('uploadBtn').onclick = () => document.getElementById('uploadFile').click();
+    document.getElementById('uploadFile').onchange = (e) => { selectedFile = e.target.files[0]; document.getElementById('uploadSubmitBtn').disabled = !selectedFile; if(selectedFile) showToast(`已选择: ${selectedFile.name}`, 'success'); };
+    document.getElementById('uploadSubmitBtn').onclick = async () => {
+        if(!selectedFile) return;
+        const formData = new FormData(); formData.append('file', selectedFile);
+        const btn = document.getElementById('uploadSubmitBtn'); btn.disabled = true; btn.innerText = '⏳ 上传中...';
+        try {
+            const res = await fetch(`${API_BASE}/upload`, { method: 'POST', body: formData });
+            const result = await res.json();
+            if(result.code === 200 && result.data) { showToast(`导入完成: 成功 ${result.data.successCount} 条, 失败 ${result.data.failCount} 条`, result.data.failCount > 0 ? 'warning' : 'success'); loadPositions(); }
+            else { showToast(result.message || '上传失败', 'error'); }
+        } catch(e) { showToast('上传失败', 'error'); }
+        finally { btn.disabled = false; btn.innerText = '⬆️ 上传导入'; selectedFile = null; document.getElementById('uploadFile').value = ''; }
+    };
+
+    loadPositions();
+</script>
+</body>
+</html>
