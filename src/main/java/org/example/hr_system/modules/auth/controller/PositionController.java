@@ -1,76 +1,85 @@
 package org.example.hr_system.modules.auth.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.example.hr_system.common.result.Result;
-import org.example.hr_system.modules.auth.dto.ApprovalDTO;
 import org.example.hr_system.entity.Position;
-import org.example.hr_system.modules.auth.vo.ExcelImportVO;
 import org.example.hr_system.service.PositionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
 @RequestMapping("/webapi/positions")
-@RequiredArgsConstructor
 public class PositionController {
 
-    private final PositionService positionService;
+    // 1. 把 @Resource 改成 @Autowired（解决“无法解析符号'Resource'”）
+    @Autowired
+    private PositionService positionService;
 
-    // 组合查询：关键词+状态 TC-API-001~004
+    // 1. 查询岗位列表
     @GetMapping
-    public Result<List<Position>> list(
+    public Result<List<Position>> getList(
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String status) {
-        return positionService.list(keyword, status);
+            @RequestParam(required = false) String status,
+            @RequestHeader(value = "X-User-Role", defaultValue = "VISITOR") String userRole){
+        List<Position> list = positionService.getPositionList(keyword, status, userRole);
+        return Result.success(list);
     }
 
-    // 查询单个 TC-API-005~006
+    // 2. 查询单个岗位
     @GetMapping("/{id}")
-    public Result<Position> getById(@PathVariable Long id) {
-        return positionService.getById(id);
+    public Result<Position> getInfo(@PathVariable Long id){
+        Position position = positionService.getPositionById(id);
+        return Result.success(position);
     }
 
-    // 新增 TC-API-007~011
+    // 3. 新增岗位
     @PostMapping
-    public Result<Void> add(@RequestBody Position position) {
-        return positionService.add(position);
+    public Result<Void> add(@RequestBody Position position){
+        positionService.addPosition(position);
+        return Result.success();
     }
 
-    // 修改 TC-API-012~014
+    // 4. 修改岗位
     @PutMapping("/{id}")
-    public Result<Void> update(@PathVariable Long id, @RequestBody Position position) {
+    public Result<Void> update(@PathVariable Long id, @RequestBody Position position){
         position.setId(id);
-        return positionService.update(position);
+        positionService.updatePosition(position);
+        return Result.success();
     }
 
-    // 删除 TC-API-015~017
+    // 5. 删除岗位
     @DeleteMapping("/{id}")
-    public Result<Void> delete(@PathVariable Long id) {
-        return positionService.delete(id);
+    public Result<Void> delete(@PathVariable Long id){
+        positionService.deletePosition(id);
+        return Result.success();
     }
 
-    // 提交审批（新增：DRAFT → PENDING）
+    // 6. 提交审批
     @PostMapping("/{id}/submit")
-    public Result<Void> submit(@PathVariable Long id) {
-        return positionService.submitApproval(id);
+    public Result<Void> submit(@PathVariable Long id){
+        positionService.submitApproval(id);
+        return Result.success();
     }
 
-    // 审批通过/驳回 TC-API-018~021
+    // 7. 审批操作
     @PostMapping("/{id}/approve")
-    public Result<Void> approve(@PathVariable Long id, @RequestBody ApprovalDTO dto) {
-        return positionService.approve(id, dto.getAction(), dto.getComment());
+    public Result<Void> approve(@PathVariable Long id, @RequestParam boolean pass){
+        positionService.approvePosition(id, pass);
+        return Result.success();
     }
 
-    // 关闭岗位（PUBLISHED → CLOSED）TC-FLOW-003
+    // 8. 关闭岗位
     @PostMapping("/{id}/close")
-    public Result<Void> close(@PathVariable Long id) {
-        return positionService.closePosition(id);
+    public Result<Void> close(@PathVariable Long id){
+        positionService.closePosition(id);
+        return Result.success();
     }
 
-    // Excel批量上传（最终版）
+    // 9. Excel批量导入
     @PostMapping("/upload")
-    public Result<ExcelImportVO> upload(@RequestParam("file") MultipartFile file) {
-        return positionService.uploadExcel(file);
+    public Result<String> upload(@RequestParam("file") MultipartFile file){
+        String msg = positionService.importPositionData(file);
+        return Result.success(msg);
     }
 }
