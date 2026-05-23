@@ -1,0 +1,176 @@
+﻿[
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "REG-001",
+        "CaseName":  "Register RECRUITER user"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "REG-002",
+        "CaseName":  "Register APPROVER user"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "REG-003",
+        "CaseName":  "Register VISITOR user"
+    },
+    {
+        "Message":  "code=500",
+        "Passed":  true,
+        "CaseId":  "REG-004",
+        "CaseName":  "Duplicate username rejected"
+    },
+    {
+        "Message":  "code=200,role=RECRUITER,token=test-token-3",
+        "Passed":  true,
+        "CaseId":  "LOGIN-001",
+        "CaseName":  "Login with correct credentials"
+    },
+    {
+        "Message":  "code=400",
+        "Passed":  true,
+        "CaseId":  "LOGIN-002",
+        "CaseName":  "Login with wrong password rejected"
+    },
+    {
+        "Message":  "code=400",
+        "Passed":  true,
+        "CaseId":  "LOGIN-003",
+        "CaseName":  "Login nonexistent user rejected"
+    },
+    {
+        "Message":  "code=200,role=RECRUITER",
+        "Passed":  true,
+        "CaseId":  "LOGIN-004",
+        "CaseName":  "Admin user login"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "ROLE-001",
+        "CaseName":  "VISITOR can view position list"
+    },
+    {
+        "Message":  "code=403",
+        "Passed":  true,
+        "CaseId":  "ROLE-002",
+        "CaseName":  "VISITOR cannot create position (403)"
+    },
+    {
+        "Message":  "code=403",
+        "Passed":  true,
+        "CaseId":  "ROLE-003",
+        "CaseName":  "VISITOR cannot delete position (403)"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "ROLE-004",
+        "CaseName":  "RECRUITER can create position"
+    },
+    {
+        "Message":  "code=403",
+        "Passed":  true,
+        "CaseId":  "ROLE-005",
+        "CaseName":  "RECRUITER cannot approve (403)"
+    },
+    {
+        "Message":  "code=403",
+        "Passed":  true,
+        "CaseId":  "ROLE-006",
+        "CaseName":  "APPROVER cannot create position (403)"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "ROLE-007",
+        "CaseName":  "APPROVER can view positions"
+    },
+    {
+        "Message":  "code=403",
+        "Passed":  true,
+        "CaseId":  "ROLE-008",
+        "CaseName":  "No role header defaults VISITOR (403)"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "CRUD-001",
+        "CaseName":  "Create position (Frontend Engineer)"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "CRUD-002",
+        "CaseName":  "Create position (QA Engineer)"
+    },
+    {
+        "Message":  "code=200,count=3",
+        "Passed":  true,
+        "CaseId":  "CRUD-003",
+        "CaseName":  "Query all positions"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "CRUD-004",
+        "CaseName":  "Search by keyword"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "CRUD-005",
+        "CaseName":  "Update position (DRAFT editable)"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  false,
+        "CaseId":  "CRUD-006",
+        "CaseName":  "Empty title rejected (400)"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "APR-001",
+        "CaseName":  "Submit for approval (DRAFT-\u003ePENDING)"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "APR-002",
+        "CaseName":  "APPROVER approve (PENDING-\u003ePUBLISHED)"
+    },
+    {
+        "Message":  "code=400",
+        "Passed":  true,
+        "CaseId":  "APR-003",
+        "CaseName":  "Approve non-PENDING rejected (400)"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "APR-004",
+        "CaseName":  "Submit second position for approval"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "APR-005",
+        "CaseName":  "APPROVER reject (PENDING-\u003eDRAFT)"
+    },
+    {
+        "Message":  "code=200",
+        "Passed":  true,
+        "CaseId":  "APR-006",
+        "CaseName":  "Delete DRAFT position"
+    },
+    {
+        "Message":  "code=400",
+        "Passed":  true,
+        "CaseId":  "APR-007",
+        "CaseName":  "Delete PUBLISHED position rejected (400)"
+    }
+]

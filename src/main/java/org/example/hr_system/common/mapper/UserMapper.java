@@ -8,10 +8,10 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserMapper {
 
-    @Select("SELECT * FROM sys_user WHERE username = #{username}")
+    @Select("SELECT id, username, password, real_name AS realName, status, role, create_time AS createTime FROM sys_user WHERE username = #{username}")
     SysUser selectByUsername(String username);
 
-    @Insert("INSERT INTO sys_user(username,password,real_name,status,create_time) " +
-            "VALUES(#{username},#{password},#{realName},1,NOW())")
+    @Insert("INSERT INTO sys_user(username,password,real_name,role,status,create_time) " +
+            "VALUES(#{username},#{password},#{realName},#{role},1,NOW())")
     int insert(SysUser user);
 }
